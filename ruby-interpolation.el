@@ -41,8 +41,12 @@
   "Keymap for `ruby-interpolation-mode`.")
 
 (defun ruby-interpolation-string-at-point-p()
-  (and ruby-interpolation-mode
-       (consp (memq 'font-lock-string-face (text-properties-at (point))))))
+  (cond ((and ruby-interpolation-mode
+	      (consp (memq 'font-lock-string-face (text-properties-at (point)))))
+	 (save-excursion
+	   (search-backward-regexp "\"\\|'" nil t)
+	   (string= "\"" (string (char-after (point))))
+	   ))))
 
 (defun ruby-interpolation-insert ()
   "Called when interpolation key is pressed"
